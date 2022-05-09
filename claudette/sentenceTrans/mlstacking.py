@@ -4,7 +4,6 @@ import numpy as np
 
 from sklearn.base import clone
 from sklearn.ensemble import AdaBoostClassifier
-from sklearn.neighbors import KNeighborsClassifier as kNN
 from sklearn.ensemble import StackingClassifier
 from metric_learn import LMNN
 
@@ -55,7 +54,7 @@ class MLStackingClassifier():
             (f'clf_{i}', Pipeline([
                 ('sampler', RandomUnderSampler(sampling_strategy=self.sampling_strategy)),
                 ('metric learner', LMNN()),
-                ('classifier', kNN())
+                ('classifier', AdaBoostClassifier())
             ]))
             for i in range(self.n_estimators)
         ]

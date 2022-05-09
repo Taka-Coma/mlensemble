@@ -7,14 +7,16 @@ from scipy.sparse import vstack
 ### Classification
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier as RF
+from sklearn.ensemble import AdaBoostClassifier
 from sklearn.svm import LinearSVC, SVC
 from sklearn.linear_model import LogisticRegression as LR
 from sklearn.neighbors import KNeighborsClassifier as kNN
 from imblearn.ensemble import BalancedRandomForestClassifier as BRF, EasyEnsembleClassifier as EE
-from imblearn.ensemble import BalancedBaggingClassifier as BBC, RUSBoostClassifier
+from imblearn.ensemble import BalancedBaggingClassifier as BBC
 
 ### mlbagging
 from mmensemble import MLEnsembleClassifier as MLE
+#from mlensemble import MLEnsembleClassifier as MLE
 ### mlboostacking
 from mlboost import MLBoost
 ### mlboosting
@@ -43,27 +45,26 @@ import datetime
 #classifiers = ['knn', 'rf', 'brf', 'ee', 'svmlin', 'svmrbf', 'mle', 'knn_lmnn', 'mle_knn', 'lr']
 #classifiers = ['brf', 'ee']
 #classifiers = ['mle', 'mlboost', 'mlstacking', 'mladaboost']
-#classifiers = ['ee', 'rusboost']
-classifiers = ['ee']
+classifiers = ['mladaboost']
 
 def main():
 	#paths =[ './vectors/setencesTrans_paraphrase.dump', './vectors/setencesTrans_stsb.dump']
 	#embs = ['sentence_trans_para', 'sentence_trans_stsb'] 
-	
-	#paths =[ './vectors/bert-base-uncased.dump', './vectors/deberta-v3-small-finetuned-hate_speech18.dump']
-	#embs = ['bert_base_uncased', 'deberta_v3_small_finetuned_hate_speech18']
 
-	#paths =['./vectors/legal-bert-base-uncased.dump']
-	#embs = ['legal_bert_base_uncased']
+	#paths =[ './vectors/bert-base-uncased.dump', './vectors/legal-bert-base-uncased.dump']
+	#embs = ['bert_base_uncased', 'legal_bert_base_uncased']
 
-	paths = [
-			#'./vectors/triplet_bert-base-uncased.dump',
-			'./vectors/triplet_legal-bert-base-uncased.dump'
-	]
-	embs = [
-			#'triplet_bert_base_uncased',
-			'triplet_legal_bert_base_uncased',
-	] 
+	paths =['./vectors/legal-bert-base-uncased.dump']
+	embs = ['legal_bert_base_uncased']
+
+	#paths = [
+	#		'./vectors/triplet_bert-base-uncased.dump',
+	#		'./vectors/triplet_legal-bert-base-uncased.dump'
+	#]
+	#embs = [
+	#		'triplet_bert_base_uncased',
+	#		'triplet_legal_bert_base_uncased',
+	#] 
 
 	for path, emb in zip(paths, embs):
 			test_vector(path, emb)
@@ -99,14 +100,14 @@ def test(dataset, cls_name, emb=None):
 	con.commit()
 
 	cur.execute(f'''
-					select max(test_number)
+					select count(distinct test_number)
 					from {dbname}
 				''')
 	if cur.fetchone()[0] == 49:
 		print(f'skipped: {dbname}')
 		return
 
-	for i in range(len(dataset)):
+	for i in range(19, len(dataset)):
 		print(i)
 
 		cur.execute(f'''
@@ -128,7 +129,7 @@ def test(dataset, cls_name, emb=None):
 		elif cls_name == 'brf':
 			cls = BRF(n_jobs=-1)
 		elif cls_name == 'ee':
-			cls = EE(n_jobs=-1, n_features=X_train.shape[1])
+			cls = EE(n_jobs=-1)
 		elif cls_name == 'svmlin':
 			cls = LinearSVC()
 		elif cls_name == 'lr':
@@ -153,27 +154,20 @@ def test(dataset, cls_name, emb=None):
 			X_train = X_train.toarray()
 
 		elif cls_name == 'mle':
-			cls = MLE(n_estimators=5, n_jobs=-1)
+			cls = MLE(n_estimators=10, n_jobs=-1, n_features=X_train.shape[1])
 			#X_train = X_train.toarray()
-
-		elif cls_name == 'mle_knn':
-			cls = MLE(base_estimator=kNN(), n_jobs=-1)
-			X_train = X_train.toarray()
 
 		elif cls_name == 'mlboost':
 			cls = MLBoost()
 			#X_train = X_train.toarray()
 
 		elif cls_name == 'mladaboost':
-			cls = MLAdaBoost()
+			#cls = MLAdaBoost()
+			cls = MLAdaBoost(base_estimator=AdaBoostClassifier())
 			#X_train = X_train.toarray()
 
 		elif cls_name == 'mlstacking':
-			cls = MLS(n_estimators=5, n_jobs=-1)
-			#X_train = X_train.toarray()
-
-		elif cls_name == 'rusboost':
-			cls = RUSBoostClassifier()
+			cls = MLS(n_estimators=10, n_jobs=-1)
 			#X_train = X_train.toarray()
 
 

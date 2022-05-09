@@ -16,6 +16,7 @@ from imblearn.ensemble import BalancedBaggingClassifier as BBC
 
 ### mlbagging
 from mmensemble import MLEnsembleClassifier as MLE
+#from mlensemble import MLEnsembleClassifier as MLE
 ### mlboostacking
 from mlboost import MLBoost
 ### mlboosting
@@ -25,6 +26,9 @@ from mlstacking import MLStackingClassifier as MLS
 
 ### Preprocessing
 from metric_learn import LMNN, SCML_Supervised as SCML
+
+### AutoML
+from autosklearn.classification import AutoSklearnClassifier
 
 ### Evaluation
 from utils import PRF_TPR_TNR_gmean_AUC
@@ -40,8 +44,7 @@ import datetime
 
 #classifiers = ['knn', 'rf', 'brf', 'ee', 'svmlin', 'svmrbf', 'mle', 'knn_lmnn', 'mle_knn', 'lr']
 #classifiers = ['brf', 'ee']
-#classifiers = ['mlstacking', 'mladaboost', 'mle', 'mlboost']
-classifiers = ['mladaboost']
+classifiers = ['mle', 'mlboost', 'mlstacking', 'mladaboost']
 
 def main():
 	#paths =[ './vectors/setencesTrans_paraphrase.dump', './vectors/setencesTrans_stsb.dump']
@@ -103,7 +106,7 @@ def test(dataset, cls_name, emb=None):
 		print(f'skipped: {dbname}')
 		return
 
-	for i in range(20, len(dataset)):
+	for i in range(len(dataset)):
 		print(i)
 
 		cur.execute(f'''

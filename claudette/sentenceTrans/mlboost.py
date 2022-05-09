@@ -86,8 +86,8 @@ class MLBoost():
                     X_train_ = np.hstack((X_train_, ml.transform(X_train)))
                     X_valid_ = np.hstack((X_valid_, ml.transform(X_valid)))
 
-            #classifier = clone(self.base_estimator)
-            classifier = EasyEnsembleClassifier(n_jobs=self.n_jobs)
+            classifier = clone(self.base_estimator)
+            #classifier = EasyEnsembleClassifier(n_jobs=self.n_jobs, n_features=X_train_.shape[1])
             classifier.fit(X_train_, y_train)
 
             y_preds = classifier.predict(X_valid_) 
@@ -136,7 +136,7 @@ class MLBoost():
         X_last = self.transform_base(X)
 
         #classifier = clone(self.base_estimator)
-        classifier = EasyEnsembleClassifier(n_jobs=self.n_jobs)
+        classifier = EasyEnsembleClassifier(n_jobs=self.n_jobs, n_features=X_last.shape[1])
         #classifier = MLE(n_jobs=self.n_jobs)
         classifier.fit(X_last, y)
 

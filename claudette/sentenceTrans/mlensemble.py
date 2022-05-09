@@ -3,6 +3,7 @@ import numbers
 import numpy as np
 
 from sklearn.base import clone
+from sklearn.neighbors import KNeighborsClassifier as kNN
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import BaggingClassifier
 from metric_learn import LMNN
@@ -27,6 +28,7 @@ class MLEnsembleClassifier(BaggingClassifier):
         n_jobs=None,
         random_state=None,
         verbose=0,
+		n_features=None
     ):
         super().__init__(
             base_estimator,
@@ -44,6 +46,7 @@ class MLEnsembleClassifier(BaggingClassifier):
         self.sampling_strategy = sampling_strategy
         self.replacement = replacement
         self.metric_learner = metric_learner 
+        self.n_features_in_ = n_features
 
 
     def _validate_y(self, y):
@@ -80,15 +83,20 @@ class MLEnsembleClassifier(BaggingClassifier):
         else:
             base_estimator = clone(default)
 
-        self.sampler = RandomUnderSampler(
-                        sampling_strategy=self._sampling_strategy,
-                        replacement=self.replacement,
-                    )
+        #self.sampler = RandomUnderSampler(
+        #                sampling_strategy=self._sampling_strategy,
+        #                replacement=self.replacement,
+        #            )
 
         self.base_estimator_ = Pipeline(
             [
-                #('scaler', StandardScaler()),
-                ("metric_learner", self.metric_learner),
+				("sampler",
+				 	RandomUnderSampler(
+						sampling_strategy=self._sampling_strategy,
+						replacement=self.replacement,
+					)
+				),
+                ("metric_learner", clone(self.metric_learner)),
                 ("classifier", base_estimator),
             ]
         )

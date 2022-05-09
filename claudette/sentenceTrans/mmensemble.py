@@ -7,6 +7,7 @@ from sklearn.base import clone
 
 from metric_learn import LMNN
 from imblearn.ensemble import BalancedBaggingClassifier
+from sklearn.neighbors import KNeighborsClassifier as kNN
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.pipeline import Pipeline
 
@@ -150,7 +151,7 @@ class MLEnsembleClassifier(BalancedBaggingClassifier):
     def __init__(self,
         sampling_strategy='auto',
         metric_learner=LMNN(),
-        base_estimator=AdaBoostClassifier(),
+        base_estimator=kNN(),
         n_jobs=1,
         n_estimators=10,
 		n_features=None
