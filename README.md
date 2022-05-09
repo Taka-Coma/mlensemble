@@ -17,6 +17,12 @@
 # Experiment
 
 ## Dataset
+- claudette: http://claudette.eui.eu/ToS.zip
+- hate-speech18: https://huggingface.co/datasets/hate_speech18 
+- tweets-hate-speech-detection dataset: https://huggingface.co/datasets/tweets_hate_speech_detection
+
+
+### Stats
 | Dataset | #positives | #negatives | Imbalance Ratio |
 ----|----|----|----
 | claudette | 1,032 | 8,382| 8.12 |
