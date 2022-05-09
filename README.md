@@ -28,3 +28,10 @@
 | claudette | 1,032 | 8,382| 8.12 |
 | hate-speech18 | 1,914 | 15,210 | 7.95 |
 | tweets-hate-speech-detection | 2,242 | 29,720 | 13.26 |
+
+
+## Baselines
+- BERT (bert-large-uncased) : https://huggingface.co/bert-base-uncased
+- legal-bert-base-uncased : https://huggingface.co/nlpaueb/legal-bert-base-uncased
+- deberta-v3-small-finetuned-hate_speech18 : https://huggingface.co/Narrativaai/deberta-v3-small-finetuned-hate_speech18
+- distilroberta-finetuned-tweets-hate-speech : https://huggingface.co/mrm8488/distilroberta-finetuned-tweets-hate-speech
