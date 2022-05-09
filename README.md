@@ -18,7 +18,7 @@
 
 ## Dataset
 | Dataset | #positives | #negatives | Imbalance Ratio |
----- | ---- | ----
+----|----|----|----
 | claudette | 1,032 | 8,382| 8.12 |
 | hate-speech18 | 1,914 | 15,210 | 7.95 |
 | tweets-hate-speech-detection | 2,242 | 29,720 | 13.26 |
