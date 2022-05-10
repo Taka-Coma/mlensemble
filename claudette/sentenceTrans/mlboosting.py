@@ -9,7 +9,7 @@ from sklearn.pipeline import Pipeline
 from imblearn.ensemble import RUSBoostClassifier
 
 
-class MLAdaBoost():
+class MLBoostingClassifier():
     def __init__(
         self,
         metric_learner=LMNN(),

@@ -1,7 +1,6 @@
 import numpy as np
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 
 from sklearn.base import clone
 
@@ -16,7 +15,7 @@ from imblearn.under_sampling import RandomUnderSampler as RUS
 from utils import PRF_TPR_TNR_gmean_AUC, prepareData
 
 
-class MLBoost():
+class MLBoostackingClassifier():
     def __init__(
         self,
         metric_learner=LMNN(),
@@ -63,8 +62,6 @@ class MLBoost():
 
 
     def _fit(self, X, y):
-        scores = []
-
         failed_samples = False
         for _ in range(self.max_iteration):
             if not failed_samples:
@@ -87,15 +84,12 @@ class MLBoost():
                     X_valid_ = np.hstack((X_valid_, ml.transform(X_valid)))
 
             classifier = clone(self.base_estimator)
-            #classifier = EasyEnsembleClassifier(n_jobs=self.n_jobs, n_features=X_train_.shape[1])
             classifier.fit(X_train_, y_train)
 
             y_preds = classifier.predict(X_valid_) 
             y_preds_proba = classifier.predict_proba(X_valid_) 
 
             score = PRF_TPR_TNR_gmean_AUC(y_valid, y_preds, y_preds_proba)
-            scores.append(score)
-            #print(score)
 
             correct_mask = [s==t for s, t in zip(y_valid, y_preds)]
             failed_ids = [i for i, _ in enumerate(correct_mask) if _]
@@ -126,18 +120,9 @@ class MLBoost():
 
             failed_samples = True
 
-        #print(scores)
-
-        #metric_learner = clone(self.metric_learner)
-        #X_ = self.transform_base(X)
-        #X_last = metric_learner.fit_transform(X_, y)
-        #self.last_metric_learner = metric_learner
-
         X_last = self.transform_base(X)
 
-        #classifier = clone(self.base_estimator)
         classifier = EasyEnsembleClassifier(n_jobs=self.n_jobs, n_features=X_last.shape[1])
-        #classifier = MLE(n_jobs=self.n_jobs)
         classifier.fit(X_last, y)
 
         self.classifier = classifier

@@ -11,24 +11,20 @@ from sklearn.ensemble import AdaBoostClassifier
 from sklearn.svm import LinearSVC, SVC
 from sklearn.linear_model import LogisticRegression as LR
 from sklearn.neighbors import KNeighborsClassifier as kNN
-from imblearn.ensemble import BalancedRandomForestClassifier as BRF, EasyEnsembleClassifier as EE
-from imblearn.ensemble import BalancedBaggingClassifier as BBC
+from imblearn.ensemble import EasyEnsembleClassifier as EE
+from imblearn.ensemble import RUSBoostClassifier
 
 ### mlbagging
-from mmensemble import MLEnsembleClassifier as MLE
-#from mlensemble import MLEnsembleClassifier as MLE
+from mlbagging import MLBaggingClassifier
 ### mlboostacking
-from mlboost import MLBoost
+from mlboostacking import MLBoostackingClassifier
 ### mlboosting
-from mladaboost import MLAdaBoost
+from mlboosting import MLBoostingClassifier
 ### mlstacking
-from mlstacking import MLStackingClassifier as MLS
+from mlstacking import MLStackingClassifier 
 
 ### Preprocessing
-from metric_learn import LMNN, SCML_Supervised as SCML
-
-### AutoML
-from autosklearn.classification import AutoSklearnClassifier
+from metric_learn import LMNN
 
 ### Evaluation
 from utils import PRF_TPR_TNR_gmean_AUC
@@ -42,28 +38,21 @@ cur = con.cursor()
 import datetime
 
 
-#classifiers = ['knn', 'rf', 'brf', 'ee', 'svmlin', 'svmrbf', 'mle', 'knn_lmnn', 'mle_knn', 'lr']
-#classifiers = ['brf', 'ee']
-classifiers = ['mle', 'mlboost', 'mlstacking', 'mladaboost']
+classifiers = ['ee', 'rusboost', 'mlbagging', 'mlboost', 'mlstacking', 'mladaboost']
 
 def main():
-	#paths =[ './vectors/setencesTrans_paraphrase.dump', './vectors/setencesTrans_stsb.dump']
-	#embs = ['sentence_trans_para', 'sentence_trans_stsb'] 
-
-	#paths =[ './vectors/bert-base-uncased.dump', './vectors/legal-bert-base-uncased.dump']
-	#embs = ['bert_base_uncased', 'legal_bert_base_uncased']
-
-	paths =['./vectors/legal-bert-base-uncased.dump']
-	embs = ['legal_bert_base_uncased']
-
-	#paths = [
-	#		'./vectors/triplet_bert-base-uncased.dump',
-	#		'./vectors/triplet_legal-bert-base-uncased.dump'
-	#]
-	#embs = [
-	#		'triplet_bert_base_uncased',
-	#		'triplet_legal_bert_base_uncased',
-	#] 
+	paths =[ 
+			'./vectors/bert-base-uncased.dump',
+			'./vectors/legal-bert-base-uncased.dump',
+            './vectors/triplet_bert-base-uncased.dump',
+            './vectors/triplet_legal-bert-base-uncased.dump'
+            ]
+    embs = [
+			'bert_base_uncased',
+			'legal_bert_base_uncased',
+            'triplet_bert_base_uncased',
+            'triplet_legal_bert_base_uncased',
+			]
 
 	for path, emb in zip(paths, embs):
 			test_vector(path, emb)
@@ -123,50 +112,23 @@ def test(dataset, cls_name, emb=None):
 		X_test = dataset[i]['test']['X']
 		y_test = dataset[i]['test']['labels']
 
-		if cls_name == 'rf':
-			cls = RF(n_jobs=-1)
-		elif cls_name == 'brf':
-			cls = BRF(n_jobs=-1)
-		elif cls_name == 'ee':
+		if cls_name == 'ee':
 			cls = EE(n_jobs=-1)
-		elif cls_name == 'svmlin':
-			cls = LinearSVC()
-		elif cls_name == 'lr':
-			cls = LR()
-		elif cls_name == 'svmrbf':
-			cls = SVC(kernel='rbf')
-		elif cls_name == 'knn':
-			cls = kNN(n_jobs=-1)
 
-		elif cls_name == 'knn_lmnn':
-			cls = Pipeline([
-							('metric learner', LMNN()),
-							('classifier', kNN(n_jobs=-1))
-			])
-			X_train = X_train.toarray()
+		elif cls_name == 'rusboost':
+			cls = RUSBoostClassifier()
 
-		elif cls_name == 'svmlin_lmnn':
-			cls = Pipeline([
-							('metric learner', LMNN()),
-							('classifier', LinearSVC())
-			])
-			X_train = X_train.toarray()
+		elif cls_name == 'mlbagging':
+			cls = MLBaggingClassifier(n_features=X_train.shape[1])
 
-		elif cls_name == 'mle':
-			cls = MLE(n_estimators=10, n_jobs=-1, n_features=X_train.shape[1])
-			#X_train = X_train.toarray()
-
-		elif cls_name == 'mlboost':
-			cls = MLBoost()
-			#X_train = X_train.toarray()
-
-		elif cls_name == 'mladaboost':
-			cls = MLAdaBoost(base_estimator=AdaBoostClassifier())
-			#X_train = X_train.toarray()
+		elif cls_name == 'mlboosting':
+			cls = MLBoostingClassifier()
 
 		elif cls_name == 'mlstacking':
-			cls = MLS(n_estimators=10, n_jobs=-1)
-			#X_train = X_train.toarray()
+			cls = MLStackingClassifier()
+
+		elif cls_name == 'mlboostacking':
+			cls = MLBoostackingClassifier()
 
 
 		cls.fit(X_train, y_train)

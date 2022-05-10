@@ -7,10 +7,7 @@ from glob import glob
 
 
 def main():
-    #model = SentenceTransformer('paraphrase-distilroberta-base-v1', device='cpu')
-    #model = SentenceTransformer('stsb-roberta-large', device='cpu')
     #model = SentenceTransformer('nlpaueb/legal-bert-base-uncased', device='cpu')
-    #model = SentenceTransformer('zlucia/custom-legalbert', device='cpu')
     model = SentenceTransformer('bert-base-uncased', device='cpu')
 
     labels = []
@@ -27,10 +24,7 @@ def main():
 
     out = list(zip(Xs, labels))
 
-    #with open('./vectors/setencesTrans_paraphrase.dump', 'wb') as w:
-    #with open('./vectors/setencesTrans_stsb.dump', 'wb') as w:
     #with open('./vectors/legal-bert-base-uncased.dump', 'wb') as w:
-    #with open('./vectors/custom-legalbert.dump', 'wb') as w:
     with open('./vectors/bert-base-uncased.dump', 'wb') as w:
         pickle.dump(out, w)
 
