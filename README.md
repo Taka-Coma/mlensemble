@@ -11,7 +11,7 @@
 | `mlstacking.py` | `mlboostacking.py` |
 
 
-# Experiment
+# How to use
 
 ## Dataset
 - claudette: http://claudette.eui.eu/ToS.zip
@@ -25,7 +25,7 @@
 | hate-speech18 | 1,914 | 15,210 | 7.95 |
 | tweets-hate-speech-detection | 2,242 | 29,720 | 13.26 |
 
-### Preparing datasets for experiment
+### Preparing datasets
 - Only for claudette: download the zip file from the above link, unzip it, and put the contents of the unzipped directories into `/datasets/claudette/original`
 - Move to `/make_dataset` directory
 - Execute `makeDataest_x.py` for each dataset x
@@ -34,7 +34,7 @@
 		- `train.json`
 		- `test.json`
 
-### Generating representations of tests
+### Generating representations of texts
 - Move to `/vectorizers` directory
 - Execute `vectorizer.py` and `vectorizer_tripletloss.py`
 	- `vectorizer.py`: generating representations from pretrained models
@@ -46,3 +46,8 @@
 - LegalBERT (legal-bert-base-uncased) : https://huggingface.co/nlpaueb/legal-bert-base-uncased
 - DeBERTa (deberta-v3-small-finetuned-hate_speech18) : https://huggingface.co/Narrativaai/deberta-v3-small-finetuned-hate_speech18
 - DistilRoBERTa (distilroberta-finetuned-tweets-hate-speech) : https://huggingface.co/mrm8488/distilroberta-finetuned-tweets-hate-speech
+
+
+## Executing classifiers
+
+### Shallow
