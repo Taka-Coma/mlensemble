@@ -1,5 +1,5 @@
-# MLEnsemble
-
+# MLEnsemble: Ensemble-based Imbalanced Text Classification using Metric Learning
+ 
 | MLBagging | MLBoosting |
 :--:|:--:
 | ![mlbagging](https://user-images.githubusercontent.com/24326273/167428926-4f2eab61-070a-4ad1-b740-fa09f87b4b69.png) | ![mlboosting](https://user-images.githubusercontent.com/24326273/167429014-f41a7251-4aa0-4302-b9e4-416ebec648a3.png) |
@@ -50,4 +50,13 @@
 
 ## Executing classifiers
 
-### Shallow
+### Shallow models including MLEnsemble
+- `python run_shallow.py`
+- This command trains and evaluates shallow models by using the representations of texts
+	-  These models include EasyEnsemble, RUSBoost, and MLEnsemble (i.e., MLBagging, MLBoosting, MLStacking, and MLBoostacking)
+
+### Deep models
+- `python run_deep.py`: train and evaluate a classifier based on the pretrained models of the baselines
+- `python run_deep_bs.py`: with balanced sampling for balance class labels in each batch
+- `python run_deep_wce.py`: with weighted cross entropy loss
+- `python run_deep_bs_wce.py`: with both os balanced sampling and weighted cross entropy loss
