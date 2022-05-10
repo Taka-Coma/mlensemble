@@ -27,6 +27,6 @@
 
 ## Baselines
 - BERT (bert-large-uncased) : https://huggingface.co/bert-base-uncased
-- legal-bert-base-uncased : https://huggingface.co/nlpaueb/legal-bert-base-uncased
-- deberta-v3-small-finetuned-hate_speech18 : https://huggingface.co/Narrativaai/deberta-v3-small-finetuned-hate_speech18
-- distilroberta-finetuned-tweets-hate-speech : https://huggingface.co/mrm8488/distilroberta-finetuned-tweets-hate-speech
+- LegalBERT (legal-bert-base-uncased) : https://huggingface.co/nlpaueb/legal-bert-base-uncased
+- DeBERTa (deberta-v3-small-finetuned-hate_speech18) : https://huggingface.co/Narrativaai/deberta-v3-small-finetuned-hate_speech18
+- DistilRoBERTa (distilroberta-finetuned-tweets-hate-speech) : https://huggingface.co/mrm8488/distilroberta-finetuned-tweets-hate-speech
