@@ -2,7 +2,6 @@
 
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
-#os.environ['TRANSFORMERS_OFFLINE'] = '1'
 
 from sentence_transformers import SentenceTransformer, models, InputExample, losses, SentencesDataset
 from torch import nn

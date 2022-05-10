@@ -1,32 +1,67 @@
 # -*- coding: utf-8 -*-
 
-from sentence_transformers import SentenceTransformer
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
+
+from sentence_transformers import SentenceTransformer, models
 
 import pickle
-from glob import glob
+import json
+import numpy as np
 
 
 def main():
-    #model = SentenceTransformer('nlpaueb/legal-bert-base-uncased', device='cpu')
-    model = SentenceTransformer('bert-base-uncased', device='cpu')
+	models = [
+		'bert-base-uncased', 
+		'nlpaueb/legal-bert-base-uncased',
+	]
 
-    labels = []
-    for path in glob('../data/Labels/*.txt'):
-        with open(path, 'r') as r:
-            labels.append([line.strip() for line in r])
+	fnames = [
+		'./vectors/bert-base-uncased.dump',
+		'./vectors/legal-bert-base-uncased.dump',
+	]
 
-    Xs = []
-    for path in glob('../data/Sentences/*.txt'):
-        with open(path, 'r') as r:
-            sentences = [line.strip() for line in r]
-            X = model.encode(sentences)
-        Xs.append(X)
+	for model, fname in zip(models, fnames):
+		datasets = []
+		for i in range(50):
+			print(i)
+			dataset = vectorize(i, model)
+			datasets.append(dataset)
 
-    out = list(zip(Xs, labels))
+		with open(fname, 'wb') as w:
+			pickle.dump(datasets, w)
 
-    #with open('./vectors/legal-bert-base-uncased.dump', 'wb') as w:
-    with open('./vectors/bert-base-uncased.dump', 'wb') as w:
-        pickle.dump(out, w)
+
+def vectorize(i, model_name):
+	with open(f'../dataset/{i}/train.json', 'r') as r:
+		data = json.load(r)
+		labels = data['labels']
+
+		model = SentenceTransformer(model_name, device='cpu')
+
+		X = None
+		for txt in data['text']:
+		    if X is None:
+		        X = model.encode(txt)
+		    else:
+		        X = np.vstack((X, model.encode(txt)))
+		train_data = {'X': X, 'labels': labels}
+
+		with open(f'../dataset/{i}/test.json', 'r') as r:
+			data = json.load(r)
+			labels = data['labels']
+
+			X = None
+			for txt in data['text']:
+				if X is None:
+					X = model.encode(txt)
+				else:
+					X = np.vstack((X, model.encode(txt)))
+			test_data = {'X': X, 'labels': labels}
+
+		out = {'train': train_data, 'test': test_data}
+
+	return out
 
 if __name__ == "__main__":
     main()
