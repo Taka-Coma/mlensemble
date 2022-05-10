@@ -12,48 +12,59 @@ import numpy as np
 
 def main():
 	### for claudette
+	ds_name = 'claudette'
+	num_split = 50
 	models = [
 		'bert-base-uncased', 
 		'nlpaueb/legal-bert-base-uncased',
 	]
 	fnames = [
-		'./vectors/claudette/bert-base-uncased.dump',
-		'./vectors/claudette/legal-bert-base-uncased.dump',
+		'../vectors/claudette/bert-base-uncased.dump',
+		'../vectors/claudette/legal-bert-base-uncased.dump',
 	]
+	vectorizeDataset(ds_name, num_split, models, fnames)
 
 	### for hate-speech18
-	#models = [
-	#	'bert-base-uncased',
-	#	'Narrativaai/deberta-v3-small-finetuned-hate_speech18',
-	#]
-	#fnames = [
-    #	'./vectors/hate_speech18/bert-base-uncased.dump',
-    #	'./vectors/hate_speech18/deberta-v3-small-finetuned-hate_speech18.dump',
-	#]
+	ds_name = 'hate_speech18'
+	num_split = 10
+	models = [
+		'bert-base-uncased',
+		'Narrativaai/deberta-v3-small-finetuned-hate_speech18',
+	]
+	fnames = [
+    	'../vectors/hate_speech18/bert-base-uncased.dump',
+    	'../vectors/hate_speech18/deberta-v3-small-finetuned-hate_speech18.dump',
+	]
+	vectorizeDataset(ds_name, num_split, models, fnames)
 
 	### tweets-hate-speech
-	#models = [
-	#	'bert-base-uncased',
-	#	'mrm8488/distilroberta-finetuned-tweets-hate-speech',
-	#]
-	#fnames = [
-    #	'./vectors/tweet_hate/bert-base-uncased.dump',
-    #	'./vectors/tweet_hate/distilroberta-finetuned-tweets-hate-speech.dump',
-	#]
+	ds_name = 'tweets_hate_speech_detection'
+	num_split = 10
+	models = [
+		'bert-base-uncased',
+		'mrm8488/distilroberta-finetuned-tweets-hate-speech',
+	]
+	fnames = [
+    	'../vectors/tweet_hate/bert-base-uncased.dump',
+    	'../vectors/tweet_hate/distilroberta-finetuned-tweets-hate-speech.dump',
+	]
+	vectorizeDataset(ds_name, num_split, models, fnames)
 
+
+
+def vectorizeDataset(ds_name, num_split, models, fnames):
 	for model, fname in zip(models, fnames):
 		datasets = []
-		for i in range(50):
-			print(i)
-			dataset = vectorize(i, model)
+		for i in range(num_split):
+			dataset = vectorize(i, model, ds_name)
 			datasets.append(dataset)
 
 		with open(fname, 'wb') as w:
 			pickle.dump(datasets, w)
 
 
-def vectorize(i, model_name):
-	with open(f'../dataset/{i}/train.json', 'r') as r:
+def vectorize(i, model_name, ds_name):
+	with open(f'../datasets/{ds_name}/{i}/train.json', 'r') as r:
 		data = json.load(r)
 		labels = data['labels']
 
@@ -67,7 +78,7 @@ def vectorize(i, model_name):
 		        X = np.vstack((X, model.encode(txt)))
 		train_data = {'X': X, 'labels': labels}
 
-		with open(f'../dataset/{i}/test.json', 'r') as r:
+		with open(f'../datasets/{ds_name}/{i}/test.json', 'r') as r:
 			data = json.load(r)
 			labels = data['labels']
 
