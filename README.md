@@ -34,6 +34,12 @@
 		- `train.json`
 		- `test.json`
 
+### Generating representations of tests
+- Move to `/vectorizers` directory
+- Execute `vectorizer.py` and `vectorizer_tripletloss.py`
+	- `vectorizer.py`: generating representations from pretrained models
+	- `vectorizer_tripletloss.py`: generating representations from pretrained models by using Triplet loss
+
 
 ## Baselines
 - BERT (bert-large-uncased) : https://huggingface.co/bert-base-uncased
