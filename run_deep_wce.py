@@ -25,9 +25,13 @@ from glob import glob
 ### For saving results
 import psycopg2 as psql
 con = psql.connect(dbname='claudette', user='taka-coma', host='192.168.111.200')
-con = psql.connect(dbname='hate_speech18', user='taka-coma', host='192.168.111.200')
-con = psql.connect(dbname='tweets_hate', user='taka-coma', host='192.168.111.200')
+#con = psql.connect(dbname='hate_speech18', user='taka-coma', host='192.168.111.200')
+#con = psql.connect(dbname='tweets_hate', user='taka-coma', host='192.168.111.200')
 cur = con.cursor()
+
+ds_name = 'claudette'
+#ds_name = 'hate_speech18'
+#ds_name = 'tweets_hate_speech_detection'
 
 
 ### BERT model
@@ -177,7 +181,7 @@ def compute_metrics(eval_pred):
 
 
 def loadData(i):
-	path_head = f'../dataset/{i}'
+	path_head = f'./datasets/{ds_name}/{i}'
 
 	train_dataset = loadSplit(f'{path_head}/train.json')
 	test_dataset = loadSplit(f'{path_head}/test.json')
