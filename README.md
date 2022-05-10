@@ -18,13 +18,21 @@
 - hate-speech18: https://huggingface.co/datasets/hate_speech18 
 - tweets-hate-speech-detection dataset: https://huggingface.co/datasets/tweets_hate_speech_detection
 
-
 ### Stats
 | Dataset | #positives | #negatives | Imbalance Ratio |
 :---|---:|---:|---:
 | claudette | 1,032 | 8,382| 8.12 |
 | hate-speech18 | 1,914 | 15,210 | 7.95 |
 | tweets-hate-speech-detection | 2,242 | 29,720 | 13.26 |
+
+### Preparing datasets for experiment
+- Only for claudette: download the zip file from the above link, unzip it, and put the contents of the unzipped directories into `/datasets/claudette/original`
+- Move to `/make_dataset` directory
+- Execute `makeDataest_x.py` for each dataset x
+	- `/datasets/x/i` directory is created for i-th dataset
+	- The following files are in this directory
+		- `train.json`
+		- `test.json`
 
 
 ## Baselines
