@@ -11,15 +11,35 @@ import numpy as np
 
 
 def main():
+	### for claudette
 	models = [
 		'bert-base-uncased', 
 		'nlpaueb/legal-bert-base-uncased',
 	]
-
 	fnames = [
-		'./vectors/bert-base-uncased.dump',
-		'./vectors/legal-bert-base-uncased.dump',
+		'./vectors/claudette/bert-base-uncased.dump',
+		'./vectors/claudette/legal-bert-base-uncased.dump',
 	]
+
+	### for hate-speech18
+	#models = [
+	#	'bert-base-uncased',
+	#	'Narrativaai/deberta-v3-small-finetuned-hate_speech18',
+	#]
+	#fnames = [
+    #	'./vectors/hate_speech18/bert-base-uncased.dump',
+    #	'./vectors/hate_speech18/deberta-v3-small-finetuned-hate_speech18.dump',
+	#]
+
+	### tweets-hate-speech
+	#models = [
+	#	'bert-base-uncased',
+	#	'mrm8488/distilroberta-finetuned-tweets-hate-speech',
+	#]
+	#fnames = [
+    #	'./vectors/tweet_hate/bert-base-uncased.dump',
+    #	'./vectors/tweet_hate/distilroberta-finetuned-tweets-hate-speech.dump',
+	#]
 
 	for model, fname in zip(models, fnames):
 		datasets = []

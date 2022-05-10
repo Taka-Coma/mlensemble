@@ -13,15 +13,37 @@ import numpy as np
 
 
 def main():
+	### for claudette
 	models = [
 		'bert-base-uncased', 
 		'nlpaueb/legal-bert-base-uncased',
 	]
-
 	fnames = [
-		'./vectors/triplet_bert-base-uncased.dump',
-		'./vectors/triplet_legal-bert-base-uncased.dump',
+		'./vectors/claudette/triplet_bert-base-uncased.dump',
+		'./vectors/claudette/triplet_legal-bert-base-uncased.dump',
 	]
+
+	### for hate_speech18
+	#models = [
+	#	'bert-base-uncased', 
+    #    'Narrativaai/deberta-v3-small-finetuned-hate_speech18'
+	#]
+	#fnames = [
+    #    './vectors/hate_speech18/triplet_bert-base-uncased.dump',
+    #    './vectors/hate_speech18/triplet_deberta-v3-small-finetuned-hate_speech18.dump'
+	#]
+
+	### for tweets-hate-speech
+	#models = [
+	#	'bert-base-uncased', 
+	#	'mrm8488/distilroberta-finetuned-tweets-hate-speech'
+	#]
+	#fnames = [
+	#	'./vectors/tweet_hate/triplet_bert-base-uncased.dump',
+	#	'./vectors/tweet_hate/triplet_distilroberta-finetuned-tweets-hate-speech.dump',
+	#]
+
+
 
 
 	for model, fname in zip(models, fnames):

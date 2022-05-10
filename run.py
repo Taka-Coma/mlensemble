@@ -32,27 +32,57 @@ from utils import PRF_TPR_TNR_gmean_AUC
 ### For saving results
 import psycopg2 as psql
 con = psql.connect(dbname='claudette', user='taka-coma', host='192.168.111.200')
+#con = psql.connect(dbname='hate_speech18', user='taka-coma', host='192.168.111.200')
+#con = psql.connect(dbname='tweets_hate', user='taka-coma', host='192.168.111.200')
 cur = con.cursor()
-
-### Misc
-import datetime
-
 
 classifiers = ['ee', 'rusboost', 'mlbagging', 'mlboost', 'mlstacking', 'mladaboost']
 
 def main():
+	### for claudette
 	paths =[ 
-			'./vectors/bert-base-uncased.dump',
-			'./vectors/legal-bert-base-uncased.dump',
-            './vectors/triplet_bert-base-uncased.dump',
-            './vectors/triplet_legal-bert-base-uncased.dump'
-            ]
+		'./vectors/claudette/bert-base-uncased.dump',
+		'./vectors/claudette/legal-bert-base-uncased.dump',
+        './vectors/claudette/triplet_bert-base-uncased.dump',
+        './vectors/claudette/triplet_legal-bert-base-uncased.dump'
+        ]
     embs = [
-			'bert_base_uncased',
-			'legal_bert_base_uncased',
-            'triplet_bert_base_uncased',
-            'triplet_legal_bert_base_uncased',
-			]
+		'bert_base_uncased',
+		'legal_bert_base_uncased',
+        'triplet_bert_base_uncased',
+        'triplet_legal_bert_base_uncased',
+		]
+
+
+	### for hate-speech18
+	#paths =[ 
+	#	'./vectors/hate_speech18/bert-base-uncased.dump',
+	#	'./vectors/hate_speech18/deberta-v3-small-finetuned-hate_speech18.dump',
+	#	'./vectors/hate_speech18/triplet_bert-base-uncased.dump',
+	#	'./vectors/hate_speech18/triplet_deberta-v3-small-finetuned-hate_speech18.dump'
+	#	]
+	#embs = [
+	#	'bert_base_uncased',
+	#	'deberta_v3_small_finetuned_hate_speech18',
+	#	'triplet_bert_base_uncased',
+	#	'triplet_deberta_v3_small_finetuned_hate_speech18'
+	#	]
+
+
+	### for tweets-hate-speech-detection
+	#paths =[
+    #   './vectors/tweet_hate/bert-base-uncased.dump',
+    #   './vectors/tweet_hate/distilroberta-finetuned-tweets-hate-speech.dump',
+	#	'./vectors/tweet_hate/triplet_bert-base-uncased.dump',
+	#	'./vectors/tweet_hate/triplet_distilroberta-finetuned-tweets-hate-speech.dump'
+    #   ]
+	#embs = [
+    #   'bert_base_uncased',
+    #   'distilroberta_finetuned_tweets_hate_speech',
+	#	'triplet_bert_base_uncased',
+	#	'triplet_distilroberta_finetuned_tweets_hate_speech'
+	#	]
+
 
 	for path, emb in zip(paths, embs):
 			test_vector(path, emb)
@@ -66,7 +96,6 @@ def test_vector(path, emb):
 		dataset = pickle.load(r) 
 
 	for cls in classifiers:
-		print(f'{datetime.datetime.now()} || {cls}')
 		test(dataset, cls, emb=emb)
 
 
