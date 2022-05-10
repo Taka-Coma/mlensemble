@@ -7,6 +7,7 @@ os.environ['WANDB_DISABLED'] = 'true'
 import torch
 from transformers import BertTokenizerFast, BertForSequenceClassification
 from transformers import DebertaV2Tokenizer, DebertaV2ForSequenceClassification
+from transformers import RobertaTokenizerFast, RobertaForSequenceClassification
 from transformers import Trainer, TrainingArguments, DataCollatorWithPadding, EarlyStoppingCallback
 
 import numpy as np
@@ -22,16 +23,27 @@ from glob import glob
 
 ### For saving results
 import psycopg2 as psql
-dbname = 'hate_speech18'
-con = psql.connect(dbname=dbname, user='taka-coma', host='192.168.111.200')
+con = psql.connect(dbname='claudette', user='taka-coma', host='192.168.111.200')
+#con = psql.connect(dbname='hate_speech18', user='taka-coma', host='192.168.111.200')
+#con = psql.connect(dbname='tweets_hate', user='taka-coma', host='192.168.111.200')
 cur = con.cursor()
 
 
 ### BERT model
-#model_name = 'bert-base-uncased'
-model_name = 'Narrativaai/deberta-v3-small-finetuned-hate_speech18'
-tokenizer = DebertaV2Tokenizer.from_pretrained(model_name)
+model_name = 'bert-base-uncased'
+tokenizer = BertTokenizerFast.from_pretrained(model_name)
+
+### LegalBERT model
+#model_name = 'nlpaueb/legal-bert-base-uncased'
 #tokenizer = BertTokenizerFast.from_pretrained(model_name)
+
+### DeBERTa model
+#model_name = 'Narrativaai/deberta-v3-small-finetuned-hate_speech18'
+#tokenizer = DebertaV2Tokenizer.from_pretrained(model_name)
+
+### RoBERTa model
+#model_name = 'mrm8488/distilroberta-finetuned-tweets-hate-speech'
+#tokenizer = RobertaTokenizerFast.from_pretrained(model_name)
 
 
 def main():
@@ -90,10 +102,15 @@ def examine(train_ds, test_ds, tblname, i):
 		load_best_model_at_end=True,
 	)
 
-	#model = BertForSequenceClassification.from_pretrained(model_name, num_labels=2)
-	model = DebertaV2ForSequenceClassification.from_pretrained(model_name, num_labels=4)
+	### for BERT and LegalBERT
+	model = BertForSequenceClassification.from_pretrained(model_name, num_labels=2)
 
-	#trainer = BalancedTrainer(
+	### for DeBERTa
+	#model = DebertaV2ForSequenceClassification.from_pretrained(model_name, num_labels=4)
+
+	### for RoBERTa
+	#model = RobertaForSequenceClassification.from_pretrained(model_name, num_labels=2)
+
 	trainer = Trainer(
 		model=model,
 		args=training_args,
@@ -114,27 +131,6 @@ def examine(train_ds, test_ds, tblname, i):
 		'f1': metrics['eval_f1'],
 		'f2': metrics['eval_f2'],
 	}
-
-
-class BalancedTrainer(Trainer):
-	def compute_loss(self, model, inputs, return_outputs=False):
-		data_dict = self.train_dataset.to_dict()
-		freq = Counter(data_dict['labels']).most_common(2)
-		class_count = np.array([freq[0][1], freq[1][1]])
-
-		labels = inputs.get('labels')
-		outputs = model(**inputs)
-		logits = outputs.get("logits")
-
-		weights = 1./class_count
-		weights = weights / weights.sum()
-		weights = torch.from_numpy(weights).float().to('cuda')
-
-		loss_fn = torch.nn.CrossEntropyLoss(weight=weights)
-		loss = loss_fn(logits.view(-1, model.config.num_labels), labels.view(-1))
-
-		return (loss, outputs) if return_outputs else loss
-
 
 
 
