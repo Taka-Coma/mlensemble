@@ -1,4 +1,9 @@
 # MLEnsemble: Ensemble-based Imbalanced Text Classification using Metric Learning
+
+- Source code for the following publication
+```
+Takahiro Komamizu, “Towards Ensemble-based Imbalanced Text Classification using Metric Learning”, DEXA, pp., 2023
+```
  
 | MLBagging | MLBoosting |
 :--:|:--:
